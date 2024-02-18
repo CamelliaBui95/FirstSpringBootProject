@@ -1,7 +1,6 @@
 package fr.btn.SpingDbProject.dao.impl;
 
 import fr.btn.SpingDbProject.TestDataUtils;
-import fr.btn.SpingDbProject.dao.impl.BookDaoImpl;
 import fr.btn.SpingDbProject.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +20,13 @@ public class BookDaoImplTests {
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private BookDaoImpl undertest;
+    private BookDaoImpl underTest;
 
     @Test
     public void testThatCreateBookGeneratesCorrectSql() {
-        Book book = TestDataUtils.getBookForTests();
+        Book book = TestDataUtils.getBookA();
 
-        undertest.create(book);
+        underTest.create(book);
 
         verify(jdbcTemplate).update(eq("INSERT INTO BOOKS (isbn, title, id) VALUES (?,?,?)"),
                 eq("9780140181326"), eq("The Heart Is a Lonely Hunter"), eq(1L));
@@ -37,8 +36,36 @@ public class BookDaoImplTests {
 
     @Test
     public void testThatFindOneGeneratesTheCorrectSql() {
-        undertest.findOne("ABC");
+        underTest.findOne("ABC");
 
         verify(jdbcTemplate).query(eq("SELECT isbn, title, id FROM BOOKS WHERE isbn = ? LIMIT 1"), ArgumentMatchers.<BookDaoImpl.BookRowMapper>any(), eq("ABC"));
+    }
+
+    @Test
+    public void testThatFindManyGeneratesTheCorrectSql() {
+        underTest.find();
+
+        verify(jdbcTemplate).query(eq("SELECT isbn, title, id FROM BOOKS"), ArgumentMatchers.<BookDaoImpl.BookRowMapper>any());
+    }
+
+    @Test
+    public void testThatUpdateGeneratesTheCorrectSql() {
+        Book book = TestDataUtils.getBookA();
+        underTest.update("9780140181326", book);
+
+        verify(jdbcTemplate).update(eq("UPDATE BOOKS SET isbn = ?, title = ?, id = ? WHERE isbn = ?"),
+                                    eq("9780140181326"),
+                                    eq("The Heart Is a Lonely Hunter"),
+                                    eq(1L),
+                                    eq("9780140181326"));
+    }
+
+    @Test
+    public void testThatDeleteGeneratesTheCorrectSql() {
+        Book book = TestDataUtils.getBookA();
+
+        underTest.delete(book.getIsbn());
+
+        verify(jdbcTemplate).update(eq("DELETE FROM BOOKS WHERE isbn = ?"), eq(book.getIsbn()));
     }
 }
