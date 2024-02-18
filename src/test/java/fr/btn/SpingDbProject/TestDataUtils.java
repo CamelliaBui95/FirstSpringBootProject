@@ -33,29 +33,29 @@ public class TestDataUtils {
         return author;
     }
 
-    public static Book getBookA() {
+    public static Book getBookA(final Author author) {
         Book book = Book.builder()
                 .isbn("9780140181326")
                 .title("The Heart Is a Lonely Hunter")
-                .authorId(1L)
+                .author(author)
                 .build();
         return book;
     }
 
-    public static Book getBookB() {
+    public static Book getBookB(final Author author) {
         Book book = Book.builder()
                 .isbn("9780140181478")
                 .title("Pierre et Jean")
-                .authorId(2L)
+                .author(author)
                 .build();
         return book;
     }
 
-    public static Book getBookC() {
+    public static Book getBookC(final Author author) {
         Book book = Book.builder()
                 .isbn("9780140181995")
                 .title("Girl with a pearl earring")
-                .authorId(3L)
+                .author(author)
                 .build();
         return book;
     }

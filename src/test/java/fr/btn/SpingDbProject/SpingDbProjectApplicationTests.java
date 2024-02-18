@@ -1,6 +1,5 @@
 package fr.btn.SpingDbProject;
 
-import fr.btn.SpingDbProject.config.DatabaseConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

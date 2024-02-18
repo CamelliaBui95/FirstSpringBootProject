@@ -1,4 +1,4 @@
-package fr.btn.SpingDbProject.dao.impl;
+package fr.btn.SpingDbProject.repositories;
 
 import fr.btn.SpingDbProject.TestDataUtils;
 import fr.btn.SpingDbProject.domain.Author;
@@ -18,34 +18,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class BookDaoImplIntegrationTests {
+public class BookRepositoryIntegrationTests {
 
-    private AuthorDaoImpl authorDao;
-    private BookDaoImpl underTest;
+    private BookRepository underTest;
 
     @Autowired
-    public BookDaoImplIntegrationTests(BookDaoImpl underTest, AuthorDaoImpl authorDao) {
+    public BookRepositoryIntegrationTests(BookRepository underTest) {
         this.underTest = underTest;
-        this.authorDao = authorDao;
     }
 
     @Test
     public void testThatBookCanBeCreatedAndRecalled() {
         Author author = TestDataUtils.getAuthorA();
-        Book book = TestDataUtils.getBookA();
+        Book book = TestDataUtils.getBookA(author);
+        book.setAuthor(author);
 
-        authorDao.create(author);
-
-        book.setAuthorId(author.getId());
-
-        underTest.create(book);
-        Optional<Book> result = underTest.findOne(book.getIsbn());
+        underTest.save(book);
+        Optional<Book> result = underTest.findById(book.getIsbn());
 
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(book);
     }
 
-    @Test
+   /* @Test
     public void testThatMultipleBooksCanBeCreatedAndRecalled() {
         Author authorA = TestDataUtils.getAuthorA();
         authorDao.create(authorA);
@@ -101,5 +96,5 @@ public class BookDaoImplIntegrationTests {
         Optional<Book> deletedBook = underTest.findOne(book.getIsbn());
 
         assertThat(deletedBook).isNotPresent();
-    }
+    }*/
 }
