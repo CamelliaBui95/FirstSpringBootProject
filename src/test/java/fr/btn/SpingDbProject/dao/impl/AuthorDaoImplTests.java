@@ -1,6 +1,6 @@
 package fr.btn.SpingDbProject.dao.impl;
 
-import fr.btn.SpingDbProject.dao.impl.AuthorDaoImpl;
+import fr.btn.SpingDbProject.TestDataUtils;
 import fr.btn.SpingDbProject.domain.Author;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,11 +24,7 @@ public class AuthorDaoImplTests {
 
     @Test
     public void testThatCreateAuthorGeneratesCorrectSql() {
-        Author author = Author.builder()
-                .id(1L)
-                .name("Abigail Rose")
-                .age(80)
-                .build();
+        Author author = TestDataUtils.getAuthorForTests();
 
         underTest.create(author);
 
@@ -37,6 +33,8 @@ public class AuthorDaoImplTests {
                         eq(1L), eq("Abigail Rose"), eq(80));
 
     }
+
+
 
     @Test
     public void testThatFindOneGeneratesTheCorrectSql() {

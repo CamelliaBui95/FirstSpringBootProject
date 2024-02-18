@@ -1,5 +1,6 @@
 package fr.btn.SpingDbProject.dao.impl;
 
+import fr.btn.SpingDbProject.TestDataUtils;
 import fr.btn.SpingDbProject.dao.impl.BookDaoImpl;
 import fr.btn.SpingDbProject.domain.Book;
 import org.junit.jupiter.api.Test;
@@ -24,18 +25,15 @@ public class BookDaoImplTests {
 
     @Test
     public void testThatCreateBookGeneratesCorrectSql() {
-        Book book = Book.builder()
-                .isbn("ABC")
-                .title("You of Yesterday")
-                .authorId(1L)
-                .build();
+        Book book = TestDataUtils.getBookForTests();
 
         undertest.create(book);
 
         verify(jdbcTemplate).update(eq("INSERT INTO BOOKS (isbn, title, id) VALUES (?,?,?)"),
-                eq("ABC"), eq("You of Yesterday"), eq(1L));
+                eq("9780140181326"), eq("The Heart Is a Lonely Hunter"), eq(1L));
 
     }
+
 
     @Test
     public void testThatFindOneGeneratesTheCorrectSql() {
