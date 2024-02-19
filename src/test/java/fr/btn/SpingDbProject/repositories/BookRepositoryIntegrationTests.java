@@ -40,24 +40,21 @@ public class BookRepositoryIntegrationTests {
         assertThat(result.get()).isEqualTo(book);
     }
 
-   /* @Test
+    @Test
     public void testThatMultipleBooksCanBeCreatedAndRecalled() {
         Author authorA = TestDataUtils.getAuthorA();
-        authorDao.create(authorA);
-        Book bookA = TestDataUtils.getBookA();
-        underTest.create(bookA);
+        Book bookA = TestDataUtils.getBookA(authorA);
+        underTest.save(bookA);
 
         Author authorB = TestDataUtils.getAuthorB();
-        authorDao.create(authorB);
-        Book bookB = TestDataUtils.getBookB();
-        underTest.create(bookB);
+        Book bookB = TestDataUtils.getBookB(authorB);
+        underTest.save(bookB);
 
         Author authorC = TestDataUtils.getAuthorC();
-        authorDao.create(authorC);
-        Book bookC = TestDataUtils.getBookC();
-        underTest.create(bookC);
+        Book bookC = TestDataUtils.getBookC(authorC);
+        underTest.save(bookC);
 
-        List<Book> result = underTest.find();
+        Iterable<Book> result = underTest.findAll();
 
         assertThat(result).hasSize(3);
         assertThat(result).containsExactly(bookA, bookB, bookC);
@@ -66,17 +63,15 @@ public class BookRepositoryIntegrationTests {
     @Test
     public void testThatBookCanBeUpdated() {
         Author author = TestDataUtils.getAuthorA();
-        authorDao.create(author);
 
-        Book book = TestDataUtils.getBookA();
-        book.setAuthorId(author.getId());
-        underTest.create(book);
+        Book book = TestDataUtils.getBookA(author);
+        underTest.save(book);
 
         book.setTitle("Updated Title");
 
-        underTest.update(book.getIsbn(), book);
+        underTest.save(book);
 
-        Optional<Book> updatedBook = underTest.findOne(book.getIsbn());
+        Optional<Book> updatedBook = underTest.findById(book.getIsbn());
 
         assertThat(updatedBook).isPresent();
         assertThat(updatedBook.get()).isEqualTo(book);
@@ -85,16 +80,14 @@ public class BookRepositoryIntegrationTests {
     @Test
     public void testThatBookCanBeDeleted() {
         Author author = TestDataUtils.getAuthorA();
-        authorDao.create(author);
 
-        Book book = TestDataUtils.getBookA();
-        book.setAuthorId(author.getId());
-        underTest.create(book);
+        Book book = TestDataUtils.getBookA(author);
+        underTest.save(book);
 
-        underTest.delete(book.getIsbn());
+        underTest.deleteById(book.getIsbn());
 
-        Optional<Book> deletedBook = underTest.findOne(book.getIsbn());
+        Optional<Book> deletedBook = underTest.findById(book.getIsbn());
 
         assertThat(deletedBook).isNotPresent();
-    }*/
+    }
 }
