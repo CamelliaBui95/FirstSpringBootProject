@@ -12,7 +12,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 //@AutoConfigureTestDatabase
 //@TestPropertySource(locations = "classpath:application.properties")
 //@ContextConfiguration(classes = DatabaseConfig.class, loader = AnnotationConfigContextLoader.class)
-class SpingDbProjectApplicationTests {
+class BookApiApplicationTests {
 
 	@Test
 	void contextLoads() {
