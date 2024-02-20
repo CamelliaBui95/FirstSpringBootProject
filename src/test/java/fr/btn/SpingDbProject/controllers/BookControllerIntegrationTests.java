@@ -3,6 +3,7 @@ package fr.btn.SpingDbProject.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.btn.SpingDbProject.TestDataUtils;
 import fr.btn.SpingDbProject.domain.dto.BookDto;
+import fr.btn.SpingDbProject.domain.entities.AuthorEntity;
 import fr.btn.SpingDbProject.domain.entities.BookEntity;
 import fr.btn.SpingDbProject.services.BookService;
 import org.junit.jupiter.api.Test;
@@ -172,6 +173,65 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.title").value(testBook.getTitle())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.author").isEmpty()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateReturnsHttpStatus200() throws Exception {
+        BookEntity testBookEntityA = TestDataUtils.getBookA(null);
+        BookEntity savedBookEntity = bookService.createUpdate(testBookEntityA.getIsbn(), testBookEntityA);
+
+        BookDto bookDtoA = TestDataUtils.createBookDtoA(null);
+        bookDtoA.setIsbn(savedBookEntity.getIsbn());
+        bookDtoA.setTitle("UPDATED TITLE");
+
+        String bookAJson = objectMapper.writeValueAsString(bookDtoA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/books/" + savedBookEntity.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookAJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateReturnsUpdatedBook() throws Exception {
+        BookEntity testBookEntityA = TestDataUtils.getBookA(null);
+        BookEntity savedBookEntity = bookService.createUpdate(testBookEntityA.getIsbn(), testBookEntityA);
+
+        BookDto bookDtoA = TestDataUtils.createBookDtoA(null);
+        bookDtoA.setIsbn(savedBookEntity.getIsbn());
+        bookDtoA.setTitle("UPDATED TITLE");
+
+        String bookAJson = objectMapper.writeValueAsString(bookDtoA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/books/" + savedBookEntity.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookAJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value(savedBookEntity.getIsbn())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("UPDATED TITLE")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.author").isEmpty()
+        );
+    }
+
+    @Test
+    public void testThatDeleteBookReturnsHttpStatus204ForExistingBook() throws Exception {
+        BookEntity testBookEntityA = TestDataUtils.getBookA(null);
+        BookEntity savedBookEntity = bookService.createUpdate(testBookEntityA.getIsbn(), testBookEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/books/" + savedBookEntity.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
         );
     }
 
